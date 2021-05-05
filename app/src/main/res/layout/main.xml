@@ -3,9 +3,22 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <TextView
-        android:text="@string/hello_world"
-        android:layout_width="wrap_content"
+	<TextView
+		android:text="IP Address"
+		android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
+	
+	<EditText 
+		android:text="192.168.1.112"
+		android:id="@+id/ip_addr"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+	
+	<Button
+		android:text="Connect"
+		android:onClick="onConnect"
+		android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+	
+        
 </LinearLayout>
