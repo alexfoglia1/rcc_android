@@ -31,38 +31,44 @@ public class CarActivity extends Activity
 	private static final int joystickThrottleBreakMessageLength = 5;
 	private static boolean validIP (String ip)
 	{
-		try {
-			if ( ip == null || ip.isEmpty() ) {
+		try
+		{
+			if ( ip == null || ip.isEmpty() )
+			{
 				return false;
 			}
 
 			String[] parts = ip.split( "\\." );
-			if ( parts.length != 4 ) {
+			if ( parts.length != 4 )
+			{
 				return false;
 			}
 
-			for ( String s : parts ) {
+			for ( String s : parts )
+			{
 				int i = Integer.parseInt( s );
 				if ( (i < 0) || (i > 255) ) {
 					return false;
 				}
 			}
+			
 			if ( ip.endsWith(".") ) {
 				return false;
 			}
 			
 			return true;
-		} catch (NumberFormatException nfe) {
+		} catch (NumberFormatException nfe)
+		{
 			return false;
 		}
 	}
 	
 	public static boolean SetRaspberryAddress(String addr)
 	{
-		if(validIP(addr))
+		if (validIP(addr))
 		{
-	        raspberryAddr = addr;
-	        return true;
+	        	raspberryAddr = addr;
+	        	return true;
 		}
 		else
 		{
@@ -78,23 +84,23 @@ public class CarActivity extends Activity
 	{
 		try
 		{
-			 byte[] entireUdpData = new byte[MAX_DATAGRAM_LENGTH];
-			 DatagramPacket p = new DatagramPacket(entireUdpData, entireUdpData.length);
-		     sock.receive(p);
+			byte[] entireUdpData = new byte[MAX_DATAGRAM_LENGTH];
+			DatagramPacket p = new DatagramPacket(entireUdpData, entireUdpData.length);
+		     	sock.receive(p);
 			 
-			 byte[] imageLengthUdpData = new byte[4];
-			 imageLengthUdpData[3] = entireUdpData[0];
-			 imageLengthUdpData[2] = entireUdpData[1];
-			 int imageLengthValue = ByteBuffer.wrap(imageLengthUdpData).getInt();
+			byte[] imageLengthUdpData = new byte[4];
+			imageLengthUdpData[3] = entireUdpData[0];
+			imageLengthUdpData[2] = entireUdpData[1];
+			int imageLengthValue = ByteBuffer.wrap(imageLengthUdpData).getInt();
 			
-			 int dataFieldOffset = 0x02;
-			 byte[] imageBytesUdpData = new byte[imageLengthValue];
-			 for(int i = 0; i < imageLengthValue; i++)
-			 {
-				 imageBytesUdpData[i] = entireUdpData[dataFieldOffset + i];
-			 }
+			int dataFieldOffset = 0x02;
+			byte[] imageBytesUdpData = new byte[imageLengthValue];
+			for(int i = 0; i < imageLengthValue; i++)
+			{
+				imageBytesUdpData[i] = entireUdpData[dataFieldOffset + i];
+			}
 			 
-			 return imageBytesUdpData;
+			return imageBytesUdpData;
 		}
 		catch(Exception e)
 		{
@@ -110,13 +116,13 @@ public class CarActivity extends Activity
 	        public void run()
 	        {
 	            try
-		        {
-			        datasock.send(p); 
-		        }
-		        catch(Exception e)
-		        {
-			        displayMessage(e.toString());
-		        }
+		    {
+		    	datasock.send(p); 
+		    }
+		    catch(Exception e)
+		    {
+			    displayMessage(e.toString());
+		    }
 	        }
 	    }).start();
 	  
@@ -173,41 +179,41 @@ public class CarActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.car);
-		try
-		{
-			videosock = new DatagramSocket(VIDEO_PORT);
-			datasock = new DatagramSocket(DATA_PORT);
-			daddr = InetAddress.getByName(raspberryAddr);
-		}
-		catch(Exception e)
-		{
-			displayMessage(e.toString());
-			return;
-		}
+	try
+	{
+		videosock = new DatagramSocket(VIDEO_PORT);
+		datasock = new DatagramSocket(DATA_PORT);
+		daddr = InetAddress.getByName(raspberryAddr);
+	}
+	catch(Exception e)
+	{
+		displayMessage(e.toString());
+		return;
+	}
 		
-	    Display display;
-		display = getWindowManager().getDefaultDisplay();
-		display.getSize(size);
+	Display display;
+	display = getWindowManager().getDefaultDisplay();
+	display.getSize(size);
 		
-		HealthStatus hs = new HealthStatus(raspberryAddr);
-		if(!hs.initHealthStatus())
-		{
-		    displayMessage("Cannot start health status");
-		    return;
-		}
-		else
-		{
-		    hs.start();
-		}
+	HealthStatus hs = new HealthStatus(raspberryAddr);
+	if(!hs.initHealthStatus())
+	{
+	    displayMessage("Cannot start health status");
+	    return;
+	}
+	else
+	{
+	    //TODO: hs.start();
+	}
 		
-		new Thread(new Runnable()
+	new Thread(new Runnable()
+	{
+		public void run()
 		{
-			public void run()
+			try
 			{
-				try
-				{
-			        while (true)
-				    {
+		        	while (true)
+	         		{
 						final byte[] jpgBytes = recvImage(videosock);
 						runOnUiThread(new Runnable()
 						{
@@ -217,26 +223,26 @@ public class CarActivity extends Activity
 							}
 						});
 					}
-			    } catch(Exception e)
-				{
-					displayMessage(e.toString());
-					return;
-				}
-			}
+			 } catch(Exception e)
+			 {
+				displayMessage(e.toString());
+				return;
+			 }
+		}
 		}).start();
 		
 		sendJoystickCommandToBoard((byte)0, (byte)0);
     }
 
-	@Override
-	public void onBackPressed()
-	{
+    @Override
+    public void onBackPressed()
+    {
 		super.onBackPressed();
-	}
+    }
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent event)
-	{
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
 		final float xPercentage = event.getX()/size.x;
 		final float yPercentage = 1.0f - event.getY()/(size.y);
 		final int int8MinValue = -128;
@@ -254,6 +260,6 @@ public class CarActivity extends Activity
 		sendJoystickCommandToBoard(x_axis, y_axis);
 
 		return super.onTouchEvent(event);       
-	}
+    }
 	
 }
