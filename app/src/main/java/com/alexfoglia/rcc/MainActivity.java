@@ -25,10 +25,10 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
   		ActivityCompat.requestPermissions(this, STORAGE_PERMISSIONS, 1);
-	}
+    }
 	
-	public void onConnect(View v)
-	{
+    public void onConnect(View v)
+    {
 		EditText ip = (EditText) findViewById(R.id.ip_addr);
 		String addr = ip.getText().toString();
 
@@ -42,5 +42,5 @@ public class MainActivity extends Activity
 		{
 		    Toast.makeText(getBaseContext(), "Unvalid address", Toast.LENGTH_SHORT).show();
 		}
-	}
+    }
 }
