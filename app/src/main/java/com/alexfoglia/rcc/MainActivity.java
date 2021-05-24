@@ -24,7 +24,7 @@ public class MainActivity extends Activity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-  		ActivityCompat.requestPermissions(this, STORAGE_PERMISSIONS, 1);
+  	ActivityCompat.requestPermissions(this, STORAGE_PERMISSIONS, 1);
     }
 	
     public void onConnect(View v)
