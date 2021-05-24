@@ -32,15 +32,15 @@ public class MainActivity extends Activity
 		EditText ip = (EditText) findViewById(R.id.ip_addr);
 		String addr = ip.getText().toString();
 
-	    Toast.makeText(getBaseContext(), "Will send commands to: "+addr, Toast.LENGTH_SHORT).show();
-	    Intent myIntent = new Intent(this, CarActivity.class);
+	        Toast.makeText(getBaseContext(), "Will send commands to: "+addr, Toast.LENGTH_SHORT).show();
+	        Intent myIntent = new Intent(this, CarActivity.class);
 		if (CarActivity.SetRaspberryAddress(addr))
 		{
 		    startActivity(myIntent);
 		}
 		else
 		{
-			Toast.makeText(getBaseContext(), "Unvalid address", Toast.LENGTH_SHORT).show();
+		    Toast.makeText(getBaseContext(), "Unvalid address", Toast.LENGTH_SHORT).show();
 		}
 	}
 }
